@@ -4,9 +4,11 @@
 # environment variables
 .env
 
+# node modules
+node_modules/
+
 # cache
 __pycache__/
 
 # tkreload
-.tkreload/
 tkreload/
