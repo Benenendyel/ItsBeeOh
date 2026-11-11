@@ -15,4 +15,4 @@ class Dashboard_Page(ctk.CTkFrame):
 
     def handle_logout(self):
         clear_session()
-        self.controller.show_page("Login_Page")
+        self.controller.show_page("Auth_Page")
