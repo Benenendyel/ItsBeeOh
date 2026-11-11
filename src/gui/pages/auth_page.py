@@ -89,8 +89,8 @@ class Auth_Page(ctk.CTkFrame):
         self.register_credentials.pack(fill="both", expand=True, pady=50, padx=100)
 
         self.register_credentials.rowconfigure(0, weight=1)
-        self.register_credentials.columnconfigure(0, weight=0)
-        self.register_credentials.columnconfigure(1, weight=1)
+        self.register_credentials.columnconfigure(0, weight=1)
+        self.register_credentials.columnconfigure(1, weight=0)
         self.register_credentials.columnconfigure(2, weight=0)
 
         self.header = ctk.CTkFrame(self.register_credentials, fg_color="transparent")
@@ -102,7 +102,7 @@ class Auth_Page(ctk.CTkFrame):
             font=("Arial", 21, "bold"),
             wraplength=400,
             justify="left",
-            text_color="black",
+            text_color="#3c5a9a",
         )
         self.text.grid(row=0, column=0, padx=10, pady=10)
 
@@ -116,25 +116,78 @@ class Auth_Page(ctk.CTkFrame):
 
         self.register_form = ctk.CTkFrame(
             self.register_credentials,
+            fg_color="transparent",
         )
         self.register_form.grid(row=0, column=2, padx=5, pady=5, sticky="e")
 
         self.register_form.rowconfigure(0, weight=0)
         self.register_form.rowconfigure(1, weight=0)
         self.register_form.rowconfigure(2, weight=0)
+        self.register_form.rowconfigure(3, weight=0)
+
+        self.register_form_label = ctk.CTkLabel(
+            self.register_form,
+            text="Create an Account",
+            font=("Arial", 21, "bold"),
+            wraplength=400,
+            justify="left",
+            text_color="black",
+        )
+
+        self.register_form_label.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 
         self.create_username = ctk.CTkEntry(
             self.register_form,
             placeholder_text="Enter username here...",
-            font=("Arial", 11),
+            font=("Arial", 12),
             fg_color="white",
             text_color="black",
+            width=250,
             corner_radius=0,
             border_width=1,
             border_color="#2b2b2b",
         )
 
-        self.create_username.grid(row=0, column=0, padx=10, pady=10)
+        self.create_username.grid(row=1, column=0, padx=10, pady=10)
+
+        self.create_password = ctk.CTkEntry(
+            self.register_form,
+            placeholder_text="Create a password here...",
+            font=("Arial", 12),
+            fg_color="white",
+            text_color="black",
+            width=250,
+            corner_radius=0,
+            border_width=1,
+            border_color="#2b2b2b",
+        )
+
+        self.create_password.grid(row=2, column=0, padx=10, pady=10)
+
+        self.register_button = ctk.CTkButton(
+            self.register_form,
+            text="Sign Up",
+            width=100,
+            fg_color="#008001",
+            font=("Arial", 14, "bold"),
+            corner_radius=0,
+            border_width=1,
+            border_color="#2b2b2b",
+            command=self.handle_register,
+        )
+
+        self.register_button.grid(row=3, column=0, padx=10, pady=10, sticky="w")
+
+        self.register_status = ctk.CTkLabel(
+            self.register_form,
+            text="",
+            font=("Arial", 14, "bold"),
+            wraplength=400,
+            justify="left",
+            text_color="black",
+        )
+
+        self.register_status.grid(row=4, column=0, padx=10, pady=10, sticky="w")
 
     def handle_submit(self):
         username = self.username_entry.get().strip()
@@ -144,11 +197,33 @@ class Auth_Page(ctk.CTkFrame):
             res = validate_login_credential(username, password)
 
             if res["success"]:
-                self.hi.configure(text=f"{res['response']}")
+                self.register_status.configure(text=f"{res['response']}")
                 save_session(username)
 
                 self.controller.show_page("Dashboard_Page")
             else:
-                self.hi.configure(text=f"{res['response']}")
+                self.register_status.configure(text=f"{res['response']}")
         else:
-            self.hi.configure(text="Enter something in both inputs please.")
+            self.register_status.configure(
+                text="Enter something in both inputs please."
+            )
+
+    def handle_register(self):
+        username = self.create_username.get().strip()
+        password = self.create_password.get().strip()
+
+        if username and password:
+            res = create_user(username, password)
+
+            if res["success"]:
+                self.register_status.configure(
+                    text=f"{res['response']}", text_color="green"
+                )
+            else:
+                self.register_status.configure(
+                    text=f"{res['response']}", text_color="orange"
+                )
+        else:
+            self.register_status.configure(
+                text="Enter something in both inputs please.", text_color="red"
+            )

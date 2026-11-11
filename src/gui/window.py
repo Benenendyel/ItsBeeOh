@@ -11,11 +11,15 @@ class Window(ctk.CTk):
     WINDOW_WIDTH = 1280
     WINDOW_HEIGHT = 720
 
+    MIN_WIDTH = 900
+    MIN_HEIGHT = 600
+
     def __init__(self):
         super().__init__()
 
         self.title("ItsBeeOh")
         self.geometry(f"{self.WINDOW_WIDTH}x{self.WINDOW_HEIGHT}")
+        self.minsize(self.MIN_WIDTH, self.MIN_HEIGHT)
 
         container = ctk.CTkFrame(self, fg_color="#f5f6fa")
         container.pack(fill="both", expand=True)
